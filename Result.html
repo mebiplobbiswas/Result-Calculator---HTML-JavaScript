@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSC ফলাফল ক্যালকুলেটর</title>
+  <style>
+    :root{
+      --bg:#0f172a; /* slate-900 */
+      --panel:#111827; /* gray-900 */
+      --card:#1f2937; /* gray-800 */
+      --muted:#94a3b8; /* slate-400 */
+      --text:#e5e7eb; /* gray-200 */
+      --primary:#22c55e; /* green-500 */
+      --danger:#ef4444; /* red-500 */
+      --accent:#38bdf8; /* sky-400 */
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans","Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(135deg,var(--bg),#020617 60%);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .container{max-width:1100px;margin:24px auto;padding:16px}
+    .title{font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:.3px;display:flex;align-items:center;gap:12px}
+    .title .badge{font-size:.7em;background:linear-gradient(90deg,var(--accent),var(--primary));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+    .card{grid-column:span 12;background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.06);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+    .card .hd{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;justify-content:space-between}
+    .card .hd h2{margin:0;font-size:18px;font-weight:700}
+    .card .bd{padding:16px 18px}
+
+    @media(min-width:900px){
+      .col-7{grid-column:span 7}
+      .col-5{grid-column:span 5}
+    }
+
+    label{display:block;font-size:14px;color:var(--muted);margin-bottom:6px}
+    input,select{width:100%;padding:10px 12px;border-radius:10px;background:#0b1220;border:1px solid rgba(148,163,184,.25);color:var(--text);outline:none}
+    input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(56,189,248,.2)}
+
+    .row{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+    .row > div{grid-column:span 12}
+    @media(min-width:720px){
+      .row > .sm-6{grid-column:span 6}
+      .row > .sm-4{grid-column:span 4}
+      .row > .sm-3{grid-column:span 3}
+    }
+
+    table{width:100%;border-collapse:collapse;background:#0b1220;border-radius:12px;overflow:hidden}
+    thead th{font-weight:700;text-align:left;padding:12px;border-bottom:1px solid rgba(148,163,184,.25)}
+    tbody td{padding:10px;border-bottom:1px dashed rgba(148,163,184,.18)}
+    tbody tr:last-child td{border-bottom:none}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    button{cursor:pointer;border:none;padding:10px 14px;border-radius:10px;font-weight:700}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--primary));color:#001018}
+    .btn-ghost{background:transparent;color:var(--text);border:1px solid rgba(148,163,184,.3)}
+    .btn-danger{background:var(--danger);color:white}
+
+    .stat{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+    .stat .kpi{background:#0b1220;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px}
+    .kpi .k{font-size:12px;color:var(--muted)}
+    .kpi .v{font-size:22px;font-weight:800;margin-top:4px}
+
+    .grade-badge{display:inline-block;padding:4px 10px;border-radius:999px;font-weight:800}
+    .g-ap{background:rgba(34,197,94,.18);color:#86efac;border:1px solid rgba(34,197,94,.35)}
+    .g-a{background:rgba(56,189,248,.18);color:#7dd3fc;border:1px solid rgba(56,189,248,.35)}
+    .g-am{background:rgba(168,85,247,.18);color:#d8b4fe;border:1px solid rgba(168,85,247,.35)}
+    .g-b{background:rgba(250,204,21,.18);color:#fde68a;border:1px solid rgba(250,204,21,.35)}
+    .g-c{background:rgba(251,146,60,.18);color:#fdba74;border:1px solid rgba(251,146,60,.35)}
+    .g-d{background:rgba(59,130,246,.18);color:#bfdbfe;border:1px solid rgba(59,130,246,.35)}
+    .g-f{background:rgba(239,68,68,.18);color:#fecaca;border:1px solid rgba(239,68,68,.35)}
+
+    .print-note{font-size:12px;color:var(--muted);margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Result Calculator -<span class="badge">HTML & JavaScript</span></div>
+
+    <div class="grid">
+      <!-- Input Card -->
+      <section class="card col-7" aria-label="ইনপুট ফর্ম">
+        <div class="hd"><h2>শিক্ষার্থীর তথ্য ও নম্বর</h2></div>
+        <div class="bd">
+          <div class="row">
+            <div class="sm-6">
+              <label for="name">নাম</label>
+              <input id="name" placeholder="যেমন: বিপ্লব কুমার বিশ্বাস" />
+            </div>
+            <div class="sm-3">
+              <label for="roll">রোল</label>
+              <input id="roll" placeholder="যেমন: 123456" />
+            </div>
+            <div class="sm-3">
+              <label for="reg">রেজিঃ নং</label>
+              <input id="reg" placeholder="যেমন: 2020123456" />
+            </div>
+            <div class="sm-4">
+              <label for="board">বোর্ড</label>
+              <select id="board">
+                <option>Dhaka</option>
+                <option>Chattogram</option>
+                <option>Rajshahi</option>
+                <option>Comilla</option>
+                <option>Barishal</option>
+                <option>Jessore</option>
+                <option>Dinajpur</option>
+                <option>Mymensingh</option>
+                <option>Madrasah</option>
+                <option>Technical</option>
+              </select>
+            </div>
+            <div class="sm-4">
+              <label for="year">সাল</label>
+              <select id="year"></select>
+            </div>
+            <div class="sm-4">
+              <label for="group">গ্রুপ</label>
+              <select id="group">
+                <option>Science</option>
+                <option>Business Studies</option>
+                <option>Humanities</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-top:14px"></div>
+          <table aria-label="বিষয় ও নম্বর টেবিল">
+            <thead>
+              <tr>
+                <th style="width:45%">বিষয়</th>
+                <th style="width:20%">পূর্ণ নম্বর</th>
+                <th style="width:35%">অর্জিত নম্বর (0-100)</th>
+              </tr>
+            </thead>
+            <tbody id="subjects-body">
+              <!-- Rows inserted by JS -->
+            </tbody>
+          </table>
+          <div class="actions">
+            <button class="btn-primary" id="calcBtn">ফলাফল হিসাব করুন</button>
+            <button class="btn-ghost" id="resetBtn" type="button">রিসেট</button>
+          </div>
+          <div class="print-note">নোট: কোনো বিষয়ে ৩৩-এর কম পেলে GPA = 0 (F) ধরা হবে।
+          <br/>গ্রেডিং স্কেল: 80–100=A+(5.00), 70–79=A(4.00), 60–69=A-(3.50), 50–59=B(3.00), 40–49=C(2.00), 33–39=D(1.00), 0–32=F(0.00)</div>
+        </div>
+      </section>
+
+      <!-- Result Card -->
+      <section class="card col-5" aria-label="ফলাফল কার্ড">
+        <div class="hd"><h2>ফলাফল</h2> <div class="actions"><button class="btn-ghost" id="printBtn" type="button">প্রিন্ট</button></div></div>
+        <div class="bd" id="resultArea">
+          <div class="stat">
+            <div class="kpi"><div class="k">মোট নম্বর</div><div class="v" id="totalMarks">—</div></div>
+            <div class="kpi"><div class="k">গড় নম্বর</div><div class="v" id="avgMarks">—</div></div>
+            <div class="kpi"><div class="k">GPA</div><div class="v" id="gpa">—</div></div>
+            <div class="kpi"><div class="k">গ্রেড</div><div class="v" id="finalGrade">—</div></div>
+          </div>
+
+          <div style="margin-top:14px"></div>
+          <table>
+            <thead>
+              <tr><th>বিষয়</th><th>নম্বর</th><th>গ্রেড</th><th>পয়েন্ট</th></tr>
+            </thead>
+            <tbody id="breakdown">
+              <tr><td colspan="4" style="color:var(--muted);padding:12px">হিসাব করার পর এখানে বিস্তারিত দেখা যাবে।</td></tr>
+            </tbody>
+          </table>
+
+          <div style="margin-top:12px"></div>
+          <div id="studentMeta" style="font-size:14px;color:var(--muted)">শিক্ষার্থীর তথ্য: —</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ------------------ Configuration ------------------
+    const SUBJECTS = [
+      { name: 'Bangla', full: 100 },
+      { name: 'English', full: 100 },
+      { name: 'Mathematics', full: 100 },
+      { name: 'Science', full: 100 },
+      { name: 'ICT', full: 100 },
+      { name: 'Religion', full: 100 }
+    ];
+
+    function gradePoint(mark){
+      if (mark >= 80) return { grade:'A+', point:5.00, cls:'g-ap' };
+      if (mark >= 70) return { grade:'A',  point:4.00, cls:'g-a' };
+      if (mark >= 60) return { grade:'A-', point:3.50, cls:'g-am' };
+      if (mark >= 50) return { grade:'B',  point:3.00, cls:'g-b' };
+      if (mark >= 40) return { grade:'C',  point:2.00, cls:'g-c' };
+      if (mark >= 33) return { grade:'D',  point:1.00, cls:'g-d' };
+      return { grade:'F', point:0.00, cls:'g-f' };
+    }
+
+    function finalLetterFromGPA(gpa){
+      if (gpa >= 5.00) return 'A+';
+      if (gpa >= 4.00) return 'A';
+      if (gpa >= 3.50) return 'A-';
+      if (gpa >= 3.00) return 'B';
+      if (gpa >= 2.00) return 'C';
+      if (gpa >= 1.00) return 'D';
+      return 'F';
+    }
+
+    // ------------------ UI Setup ------------------
+    const tbody = document.getElementById('subjects-body');
+    SUBJECTS.forEach((s, idx)=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${s.name}</td>
+        <td>${s.full}</td>
+        <td>
+          <input inputmode="numeric" pattern="[0-9]*" class="mark-input" data-index="${idx}" placeholder="0-100" />
+        </td>`;
+      tbody.appendChild(tr);
+    });
+
+    // Year options (last 15 years + current)
+    const yearSel = document.getElementById('year');
+    const now = new Date().getFullYear();
+    for(let y = now; y >= now-15; y--){
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y; yearSel.appendChild(opt);
+    }
+
+    // ------------------ Calculation ------------------
+    const calcBtn = document.getElementById('calcBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    calcBtn.addEventListener('click', ()=>{
+      const marks = Array.from(document.querySelectorAll('.mark-input')).map(inp=>{
+        const v = Number(inp.value.trim());
+        return Number.isFinite(v) ? v : NaN;
+      });
+
+      // Validate
+      for(let i=0;i<marks.length;i++){
+        const v = marks[i];
+        if (!Number.isFinite(v) || v < 0 || v > 100){
+          alert(`দয়া করে ${SUBJECTS[i].name} বিষয়ে 0 থেকে 100 এর মধ্যে সঠিক নম্বর দিন।`);
+          return;
+        }
+      }
+
+      // Compute
+      let total = 0; let hasFail=false; let rowsHTML=''; let totalPoint=0;
+      marks.forEach((m,i)=>{
+        total += m;
+        const gp = gradePoint(m);
+        if (gp.point === 0) hasFail = true;
+        totalPoint += gp.point;
+        rowsHTML += `<tr>
+          <td>${SUBJECTS[i].name}</td>
+          <td>${m}</td>
+          <td><span class="grade-badge ${gp.cls}">${gp.grade}</span></td>
+          <td>${gp.point.toFixed(2)}</td>
+        </tr>`;
+      });
+
+      const avg = total / marks.length;
+      let gpa = hasFail ? 0 : (totalPoint / marks.length);
+      // Round to 2 decimals and cap at 5.00
+      gpa = Math.min(5, Math.round(gpa * 100) / 100);
+
+      document.getElementById('totalMarks').textContent = total.toFixed(0);
+      document.getElementById('avgMarks').textContent = avg.toFixed(2);
+      document.getElementById('gpa').textContent = gpa.toFixed(2);
+      document.getElementById('finalGrade').innerHTML = `<span class="grade-badge ${hasFail?'g-f':(gpa>=5?'g-ap':gpa>=4?'g-a':gpa>=3.5?'g-am':gpa>=3?'g-b':gpa>=2?'g-c':gpa>=1?'g-d':'g-f')}">${finalLetterFromGPA(gpa)}</span>`;
+
+      const bd = document.getElementById('breakdown');
+      bd.innerHTML = rowsHTML;
+
+      // Student meta
+      const name = document.getElementById('name').value.trim() || '—';
+      const roll = document.getElementById('roll').value.trim() || '—';
+      const reg  = document.getElementById('reg').value.trim()  || '—';
+      const board= document.getElementById('board').value;
+      const year = document.getElementById('year').value;
+      const group= document.getElementById('group').value;
+      document.getElementById('studentMeta').textContent = `নাম: ${name} | রোল: ${roll} | রেজিঃ: ${reg} | বোর্ড: ${board} | সাল: ${year} | গ্রুপ: ${group}`;
+    });
+
+    resetBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('.mark-input').forEach(i=> i.value='');
+      document.getElementById('totalMarks').textContent='—';
+      document.getElementById('avgMarks').textContent='—';
+      document.getElementById('gpa').textContent='—';
+      document.getElementById('finalGrade').textContent='—';
+      document.getElementById('breakdown').innerHTML = '<tr><td colspan="4" style="color:var(--muted);padding:12px">হিসাব করার পর এখানে বিস্তারিত দেখা যাবে।</td></tr>';
+      document.getElementById('studentMeta').textContent='শিক্ষার্থীর তথ্য: —';
+    });
+
+    printBtn.addEventListener('click', ()=>{
+      window.print();
+    });
+  </script>
+</body>
+</html>
